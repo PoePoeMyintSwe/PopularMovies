@@ -14,10 +14,19 @@ android {
     targetSdkVersion 22
     versionCode 1
     versionName "1.0"
+    buildConfigField "String", "KEY", "61743a48219745264e2aea9b2df9a391"
   }
+
   buildTypes {
+    debug {
+      debuggable true
+      applicationIdSuffix '.debug'
+      versionNameSuffix '-DEBUG'
+    }
+
     release {
-      minifyEnabled false
+      debuggable false
+      minifyEnabled true
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
@@ -33,4 +42,6 @@ dependencies {
   compile 'com.jakewharton:butterknife:7.0.1'
   compile 'com.squareup.retrofit:retrofit:1.9.0'
   compile 'com.github.bumptech.glide:glide:3.6.0'
+  compile 'io.reactivex:rxandroid:0.24.0'
+
 }
