@@ -11,6 +11,7 @@ import rx.Observable;
 import static com.poepoemyintswe.popularmovies.Config.API_KEY;
 import static com.poepoemyintswe.popularmovies.Config.BASE_URL;
 import static com.poepoemyintswe.popularmovies.Config.DISCOVER_MOVIE;
+import static com.poepoemyintswe.popularmovies.Config.SORT_BY;
 
 /**
  * Created by poepoe on 11/7/15.
@@ -55,6 +56,6 @@ public class MyRestAdapter {
 
   interface MyService {
     @GET(DISCOVER_MOVIE + "?" + API_KEY + "=" + BuildConfig.KEY) Observable<JsonObject> getMovies(
-        @Query("sort_by") String sortBy);
+        @Query(SORT_BY) String sortBy);
   }
 }
