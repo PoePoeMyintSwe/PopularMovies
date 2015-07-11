@@ -16,6 +16,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.poepoemyintswe.popularmovies.R;
 import com.poepoemyintswe.popularmovies.model.Result;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import static com.poepoemyintswe.popularmovies.Config.BACKDROP_URL;
 import static com.poepoemyintswe.popularmovies.Config.PHOTO_URL;
@@ -72,7 +74,11 @@ public class MovieDetailFragment extends Fragment {
     mTvTitle.setText(result.getTitle());
     mTvOverview.setText(result.getOverview());
     mTvLanguage.setText(result.getOriginalLanguage());
-    mTvReleaseDate.setText(result.getReleaseDate());
+    try {
+      mTvReleaseDate.setText(formatDate());
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
 
     //Photo
     ViewGroup.LayoutParams params = mBackDrop.getLayoutParams();
@@ -93,5 +99,11 @@ public class MovieDetailFragment extends Fragment {
         .into(mPoster);
 
     return rootView;
+  }
+
+  private String formatDate() throws ParseException {
+    SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd, yyyy");
+    return outputFormat.format(inputFormat.parse(result.getReleaseDate()));
   }
 }
