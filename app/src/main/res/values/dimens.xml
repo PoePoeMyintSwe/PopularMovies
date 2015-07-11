@@ -3,7 +3,7 @@
   <dimen name="activity_horizontal_margin">16dp</dimen>
   <dimen name="activity_vertical_margin">16dp</dimen>
 
-  <dimen name="spacing_nano">1dp</dimen>
+  <dimen name="spacing_nano">-1dp</dimen>
   <dimen name="spacing_micro">4dp</dimen>
   <dimen name="spacing_extra_micro">6dp</dimen>
   <dimen name="spacing_minor">8dp</dimen>

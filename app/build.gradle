@@ -43,5 +43,6 @@ dependencies {
   compile 'com.squareup.retrofit:retrofit:1.9.0'
   compile 'com.github.bumptech.glide:glide:3.6.0'
   compile 'io.reactivex:rxandroid:0.24.0'
+  compile 'com.pnikosis:materialish-progress:1.2'
 
 }

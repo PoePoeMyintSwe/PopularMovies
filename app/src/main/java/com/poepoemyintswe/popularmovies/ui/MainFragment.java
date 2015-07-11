@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.pnikosis.materialishprogress.ProgressWheel;
 import com.poepoemyintswe.popularmovies.R;
 import com.poepoemyintswe.popularmovies.adapter.MovieAdapter;
 import com.poepoemyintswe.popularmovies.api.MyRestAdapter;
@@ -27,6 +28,7 @@ import rx.schedulers.Schedulers;
 public class MainFragment extends Fragment {
 
   @Bind(R.id.rv_movies) RecyclerView mRecyclerView;
+  @Bind(R.id.progress_bar) ProgressWheel progressWheel;
 
   private MovieAdapter movieAdapter;
   public MainFragment() {
@@ -52,6 +54,8 @@ public class MainFragment extends Fragment {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Movie>() {
           @Override public void onCompleted() {
+            progressWheel.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
 
           }
 
@@ -73,6 +77,7 @@ public class MainFragment extends Fragment {
     mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
     movieAdapter = new MovieAdapter(calculateWidth());
     mRecyclerView.setAdapter(movieAdapter);
+    mRecyclerView.setVisibility(View.GONE);
   }
 
   private int calculateWidth() {
