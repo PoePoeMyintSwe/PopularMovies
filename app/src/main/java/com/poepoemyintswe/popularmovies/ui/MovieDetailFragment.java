@@ -72,6 +72,7 @@ public class MovieDetailFragment extends Fragment {
     Glide.with(getActivity())
         .load(BACKDROP_URL + result.getBackdropPath())
         .diskCacheStrategy(DiskCacheStrategy.ALL)
+        .placeholder(R.drawable.backdrop)
         .crossFade()
         .into(mBackDrop);
     Glide.with(getActivity())
