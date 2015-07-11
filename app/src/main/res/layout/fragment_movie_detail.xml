@@ -32,6 +32,7 @@
               tools:src="@drawable/backdrop"/>
           <TextView
               android:id="@+id/tv_title"
+              style="@style/movieTitle"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               tools:text="Hobbit"/>
@@ -81,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/placeholder"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitXY"/>
       </FrameLayout>
 
 
