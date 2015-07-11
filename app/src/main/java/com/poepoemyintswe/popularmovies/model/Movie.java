@@ -2,13 +2,14 @@ package com.poepoemyintswe.popularmovies.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by poepoe on 11/7/15.
  */
-public class Movie {
+public class Movie implements Serializable {
 
   @Expose private Integer page;
   @Expose private List<Result> results = new ArrayList<Result>();

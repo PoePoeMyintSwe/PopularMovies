@@ -1,5 +1,6 @@
 package com.poepoemyintswe.popularmovies.ui;
 
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,9 +20,13 @@ import com.poepoemyintswe.popularmovies.R;
 import com.poepoemyintswe.popularmovies.adapter.MovieAdapter;
 import com.poepoemyintswe.popularmovies.api.MyRestAdapter;
 import com.poepoemyintswe.popularmovies.model.Movie;
+import java.io.Serializable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static com.poepoemyintswe.popularmovies.Config.MOVIE;
+import static com.poepoemyintswe.popularmovies.Config.POSITION;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -29,7 +34,7 @@ import rx.schedulers.Schedulers;
 public class MainFragment extends Fragment {
 
   @Bind(R.id.rv_movies) RecyclerView mRecyclerView;
-  @Bind(R.id.progress_bar) ProgressWheel progressWheel;
+  @Bind(R.id.progress_bar) ProgressWheel mProgressWheel;
 
   private int pageNum = 1;
   private boolean canLoadMore = true, loadInProgress = false;
@@ -85,7 +90,7 @@ public class MainFragment extends Fragment {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Movie>() {
           @Override public void onCompleted() {
-            progressWheel.setVisibility(View.GONE);
+            mProgressWheel.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
           }
 
@@ -119,6 +124,15 @@ public class MainFragment extends Fragment {
           default:
             return -1;
         }
+      }
+    });
+
+    movieAdapter.setOnItemClickListener(new MovieAdapter.ClickListener() {
+      @Override public void onItemClick(View view, int position) {
+        Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
+        intent.putExtra(MOVIE, (Serializable) movieAdapter.getResults());
+        intent.putExtra(POSITION, position);
+        startActivity(intent);
       }
     });
 

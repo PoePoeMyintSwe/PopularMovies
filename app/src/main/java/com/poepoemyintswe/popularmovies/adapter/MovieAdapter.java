@@ -88,6 +88,10 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return (isFooterEnabled) ? results.size() + 1 : results.size();
   }
 
+  public List<Result> getResults() {
+    return results;
+  }
+
   public void setFooterEnabled(boolean footerEnabled) {
     this.isFooterEnabled = footerEnabled;
     if (footerEnabled) {
