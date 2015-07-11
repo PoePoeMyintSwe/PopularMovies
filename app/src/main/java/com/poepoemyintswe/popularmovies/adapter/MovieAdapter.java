@@ -68,6 +68,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
       Glide.with(holder.itemView.getContext())
           .load(Config.PHOTO_URL + results.get(position).getPosterPath())
+          .placeholder(R.drawable.placeholder)
           .diskCacheStrategy(DiskCacheStrategy.ALL)
           .crossFade()
           .into(((ViewHolder) holder).mImageView);
