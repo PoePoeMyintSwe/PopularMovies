@@ -1,10 +1,12 @@
-package com.poepoemyintswe.popularmovies;
+package com.poepoemyintswe.popularmovies.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.poepoemyintswe.popularmovies.R;
+import com.poepoemyintswe.popularmovies.api.MyRestAdapter;
 
 /**
  * A placeholder fragment containing a simple view.
