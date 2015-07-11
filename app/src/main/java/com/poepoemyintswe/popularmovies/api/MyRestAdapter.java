@@ -12,6 +12,7 @@ import rx.Observable;
 import static com.poepoemyintswe.popularmovies.Config.API_KEY;
 import static com.poepoemyintswe.popularmovies.Config.BASE_URL;
 import static com.poepoemyintswe.popularmovies.Config.DISCOVER_MOVIE;
+import static com.poepoemyintswe.popularmovies.Config.PAGE;
 import static com.poepoemyintswe.popularmovies.Config.SORT_BY;
 
 /**
@@ -39,7 +40,7 @@ public class MyRestAdapter {
 
     if (BuildConfig.DEBUG) {
       restAdapter = new retrofit.RestAdapter.Builder().setEndpoint(BASE_URL)
-          .setLogLevel(RestAdapter.LogLevel.FULL)
+          .setLogLevel(RestAdapter.LogLevel.BASIC)
           .setClient(new OkClient(new OkHttpClient()))
           .build();
     } else {
@@ -55,8 +56,15 @@ public class MyRestAdapter {
     return myService.getMovies("popularity.desc");
   }
 
+  public Observable<Movie> getMoviesByPages(int page) {
+    return myService.getMoviesByPages("popularity.desc", page);
+  }
+
   interface MyService {
     @GET(DISCOVER_MOVIE + "?" + API_KEY + "=" + BuildConfig.KEY) Observable<Movie> getMovies(
         @Query(SORT_BY) String sortBy);
+
+    @GET(DISCOVER_MOVIE + "?" + API_KEY + "=" + BuildConfig.KEY) Observable<Movie> getMoviesByPages(
+        @Query(SORT_BY) String sortBy, @Query(PAGE) int page);
   }
 }

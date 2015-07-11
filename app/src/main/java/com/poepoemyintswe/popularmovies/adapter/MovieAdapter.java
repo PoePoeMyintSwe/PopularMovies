@@ -18,10 +18,15 @@ import java.util.List;
 /**
  * Created by poepoe on 11/7/15.
  */
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   ClickListener mItemClickListener;
-  List<Result> results = new ArrayList<>();
-  int height;
+
+  private boolean isFooterEnabled = false;
+  private List<Result> results = new ArrayList<>();
+  private int height;
+
+  public static final int ITEM = 1;
+  public static final int FOOTER = 2;
 
   public MovieAdapter(int height) {
     setHasStableIds(true);
@@ -33,25 +38,45 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     notifyDataSetChanged();
   }
 
+  public void addMoreItems(List<Result> movies) {
+    results.addAll(movies);
+    notifyItemRangeInserted(results.size() - movies.size(), movies.size());
+  }
+
   public void setOnItemClickListener(final ClickListener mItemClickListener) {
     this.mItemClickListener = mItemClickListener;
   }
 
-  @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_movie, parent, false);
-    return new ViewHolder(view);
+  @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    if (viewType == ITEM) {
+      View view =
+          LayoutInflater.from(parent.getContext()).inflate(R.layout.row_movie, parent, false);
+      return new ViewHolder(view);
+    } else { //Footer
+      View view = LayoutInflater.from(parent.getContext())
+          .inflate(R.layout.footer_progressbar, parent, false);
+      return new Footer(view);
+    }
+
   }
 
-  @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    ViewGroup.LayoutParams params = holder.mImageView.getLayoutParams();
-    params.height = height * 3;
-    holder.mImageView.setLayoutParams(params);
+  @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    if (holder instanceof ViewHolder) {
+      ViewGroup.LayoutParams params = ((ViewHolder) holder).mImageView.getLayoutParams();
+      params.height = height * 3;
+      ((ViewHolder) holder).mImageView.setLayoutParams(params);
 
-    Glide.with(holder.mImageView.getContext())
-        .load(Config.PHOTO_URL + results.get(position).getPosterPath())
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .crossFade()
-        .into(holder.mImageView);
+      Glide.with(holder.itemView.getContext())
+          .load(Config.PHOTO_URL + results.get(position).getPosterPath())
+          .diskCacheStrategy(DiskCacheStrategy.ALL)
+          .crossFade()
+          .into(((ViewHolder) holder).mImageView);
+    }
+
+  }
+
+  @Override public int getItemViewType(int position) {
+    return (isFooterEnabled && position >= results.size()) ? FOOTER : ITEM;
   }
 
   @Override public long getItemId(int position) {
@@ -59,12 +84,28 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
   }
 
   @Override public int getItemCount() {
-    return results.size();
+    return (isFooterEnabled) ? results.size() + 1 : results.size();
+  }
+
+  public void setFooterEnabled(boolean footerEnabled) {
+    this.isFooterEnabled = footerEnabled;
+    if (footerEnabled) {
+      notifyItemInserted(results.size());
+    } else {
+      notifyItemRemoved(results.size());
+    }
   }
 
   public interface ClickListener {
     void onItemClick(View view, int position);
   }
+
+  public static class Footer extends RecyclerView.ViewHolder {
+    public Footer(View itemView) {
+      super(itemView);
+    }
+  }
+
 
   public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     @Bind(R.id.iv_movie_image) ImageView mImageView;

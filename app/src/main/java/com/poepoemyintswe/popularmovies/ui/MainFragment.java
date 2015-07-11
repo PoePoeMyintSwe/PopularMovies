@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,10 @@ public class MainFragment extends Fragment {
   @Bind(R.id.rv_movies) RecyclerView mRecyclerView;
   @Bind(R.id.progress_bar) ProgressWheel progressWheel;
 
+  private int pageNum = 1;
+  private boolean canLoadMore = true, loadInProgress = false;
+  private GridLayoutManager mLayoutManager;
+
   private MovieAdapter movieAdapter;
   public MainFragment() {
   }
@@ -47,20 +52,45 @@ public class MainFragment extends Fragment {
     getMovies();
   }
 
-  private void getMovies() {
+  private void loadMoreMovies() {
     MyRestAdapter.getInstance()
-        .getMovies()
+        .getMoviesByPages(pageNum)
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<Movie>() {
+          @Override public void onCompleted() {
+            loadInProgress = false;
+            movieAdapter.setFooterEnabled(false);
+          }
+
+          @Override public void onError(Throwable e) {
+            loadInProgress = false;
+            canLoadMore = false;
+            movieAdapter.setFooterEnabled(false);
+          }
+
+          @Override public void onNext(Movie movie) {
+            if (movie.getResults().size() > 0) {
+              movieAdapter.addMoreItems(movie.getResults());
+            } else {
+              canLoadMore = false;
+            }
+          }
+        });
+  }
+
+  private void getMovies() {
+    MyRestAdapter.getInstance().getMovies()
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Movie>() {
           @Override public void onCompleted() {
             progressWheel.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
-
           }
 
           @Override public void onError(Throwable e) {
-
+            Log.e("Error", e.getLocalizedMessage());
           }
 
           @Override public void onNext(Movie movie) {
@@ -70,7 +100,7 @@ public class MainFragment extends Fragment {
   }
 
   private void initUI() {
-    GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3);
+    mLayoutManager = new GridLayoutManager(getActivity(), 3);
     mRecyclerView.setLayoutManager(mLayoutManager);
     mRecyclerView.setHasFixedSize(true);
     int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing_nano);
@@ -78,6 +108,9 @@ public class MainFragment extends Fragment {
     movieAdapter = new MovieAdapter(calculateWidth());
     mRecyclerView.setAdapter(movieAdapter);
     mRecyclerView.setVisibility(View.GONE);
+    mRecyclerView.addOnScrollListener(new ScrollListener());
+     
+
   }
 
   private int calculateWidth() {
@@ -94,5 +127,28 @@ public class MainFragment extends Fragment {
     }
     measuredWidth = measuredWidth / 6;
     return measuredWidth;
+  }
+
+  public void loadNextPage() {
+    pageNum++;
+    loadMoreMovies();
+    movieAdapter.setFooterEnabled(true);
+    loadInProgress = true;
+  }
+
+  private class ScrollListener extends RecyclerView.OnScrollListener {
+    @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+      super.onScrolled(recyclerView, dx, dy);
+
+      if (canLoadMore && !loadInProgress) {
+        int numVisibleItems = recyclerView.getChildCount();
+        int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+
+        if (firstVisibleItem + numVisibleItems
+            >= movieAdapter.getItemCount()) { //Reached the end of the list
+          loadNextPage();
+        }
+      }
+    }
   }
 }
