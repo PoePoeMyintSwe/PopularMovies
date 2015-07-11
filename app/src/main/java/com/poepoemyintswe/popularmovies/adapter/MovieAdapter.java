@@ -114,11 +114,12 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
   public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     @Bind(R.id.iv_movie_image) ImageView mImageView;
+    @Bind(R.id.view_touch) View touch;
 
     public ViewHolder(View view) {
       super(view);
       ButterKnife.bind(this, view);
-      mImageView.setOnClickListener(this);
+      touch.setOnClickListener(this);
     }
 
     @Override public void onClick(View view) {

@@ -1,73 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-  <android.support.design.widget.AppBarLayout
-      android:id="@+id/appbar"
+  <ScrollView
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-      android:fitsSystemWindows="true">
-
-    <android.support.design.widget.CollapsingToolbarLayout
-        android:id="@+id/collapsing_toolbar"
+      android:layout_height="match_parent">
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_scrollFlags="scroll|exitUntilCollapsed"
-        app:contentScrim="?attr/colorPrimary"
-        app:expandedTitleMarginStart="@dimen/spacing_title_margin"
-        app:expandedTitleMarginEnd="@dimen/spacing_margin_medium">
+        android:layout_height="wrap_content">
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical"
+          >
+        <FrameLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+          <ImageView
+              android:id="@+id/iv_backdrop"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:scaleType="centerCrop"
+              android:fitsSystemWindows="true"
+              tools:src="@drawable/backdrop"/>
+          <TextView
+              android:id="@+id/tv_title"
+              style="@style/movieTitle"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              tools:text="Hobbit"/>
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/spacing_minor"
+            >
+          <TextView
+              style="@style/factTextStyle"
+              android:id="@+id/tv_release_date"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              tools:text="Release Date: 2015/10/01"
+              />
+          <TextView
+              style="@style/factTextStyle"
+              android:id="@+id/tv_language"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:text="Language: EN"/>
+
+          <TextView
+              android:text="@string/overview"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              style="@style/labelTitle"/>
+          <TextView
+              android:id="@+id/tv_overview"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              style="@style/overviewTextStyle"/>
+        </LinearLayout>
+      </LinearLayout>
 
       <ImageView
-          android:id="@+id/iv_backdrop"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:scaleType="centerCrop"
-          android:fitsSystemWindows="true"
-          app:layout_collapseMode="parallax"/>
+          android:id="@+id/iv_movie_image"
+          android:layout_height="@dimen/image_height"
+          android:layout_width="@dimen/image_width"
+          app:layout_anchor="@id/header"
+          app:layout_anchorGravity="bottom|left|start"
+          android:src="@drawable/placeholder"
+          android:scaleType="fitXY"
+          android:layout_margin="@dimen/spacing_major"/>
 
-      <android.support.v7.widget.Toolbar
-          android:fitsSystemWindows="true"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:app="http://schemas.android.com/apk/res-auto"
-          android:id="@+id/toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="?attr/actionBarSize"
-          android:windowActionBarOverlay="true"
-          android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-          app:elevation="4dp"
-          />
-
-    </android.support.design.widget.CollapsingToolbarLayout>
-
-  </android.support.design.widget.AppBarLayout>
-
-  <android.support.v4.widget.NestedScrollView
+    </android.support.design.widget.CoordinatorLayout>
+  </ScrollView>
+  <android.support.v7.widget.Toolbar
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:fitsSystemWindows="true"
+      android:id="@+id/toolbar"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-  </android.support.v4.widget.NestedScrollView>
-
-  <ImageView
-      android:id="@+id/iv_movie_image"
-      android:layout_height="@dimen/image_height"
-      android:layout_width="@dimen/image_width"
-      app:layout_anchor="@id/appbar"
-      app:layout_anchorGravity="bottom|left|start"
-      android:src="@drawable/placeholder"
-      android:layout_margin="@dimen/spacing_minor"/>
-
-</android.support.design.widget.CoordinatorLayout>
+      android:layout_height="?attr/actionBarSize"
+      android:windowActionBarOverlay="true"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+      app:elevation="4dp"
+      app:layout_collapseMode="pin"
+      />
+</FrameLayout>

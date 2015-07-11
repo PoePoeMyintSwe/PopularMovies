@@ -16,7 +16,7 @@
   <dimen name="spacing_margin_medium">64dp</dimen>
   <dimen name="image_height">128dp</dimen>
   <dimen name="image_width">96dp</dimen>
-  <dimen name="spacing_title_margin">112dp</dimen>
+  <dimen name="spacing_title_margin">128dp</dimen>
 
   <dimen name="text_size_nano">11sp</dimen>
   <dimen name="text_size_micro">12sp</dimen>

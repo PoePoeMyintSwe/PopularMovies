@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import butterknife.Bind;
@@ -30,7 +29,6 @@ public class MovieDetailActivity extends AppCompatActivity {
   }
 
   public void getMovieList() {
-    Log.e(MovieDetailActivity.class.getSimpleName(), "" + calculateHeight());
     List<Result> results = (List<Result>) getIntent().getSerializableExtra(MOVIE);
     int position = getIntent().getIntExtra(POSITION, 0);
     mPager.setAdapter(new DetailAdapter(getSupportFragmentManager(), results, calculateHeight()));
