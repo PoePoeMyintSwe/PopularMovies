@@ -13,10 +13,13 @@ import java.util.List;
 public class DetailAdapter extends FragmentPagerAdapter {
 
   private List<Result> results;
+  private int height;
 
-  public DetailAdapter(FragmentManager fm, List<Result> results) {
+  public DetailAdapter(FragmentManager fm, List<Result> results, int height) {
     super(fm);
     this.results = results;
+    this.height = height;
+
   }
 
   @Override public int getCount() {
@@ -24,6 +27,6 @@ public class DetailAdapter extends FragmentPagerAdapter {
   }
 
   @Override public Fragment getItem(int position) {
-    return MovieDetailFragment.newInstace(results.get(position));
+    return MovieDetailFragment.newInstance(results.get(position), height);
   }
 }
