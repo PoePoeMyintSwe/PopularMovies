@@ -7,7 +7,7 @@ User Requirement
 
 The app will:
 Upon launch, present the user with an grid arrangement of movie posters.
-Allow tje user to change sort order via a setting:
+Allow the user to change sort order via a setting:
 The sort order can be by most popular, or by highest-rated
 Allow the user to tap on a movie poster and transition to a details screen with additional information such as:
 original title
