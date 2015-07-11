@@ -2,6 +2,7 @@ package com.poepoemyintswe.popularmovies.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * Created by poepoe on 11/7/15.
  */
 
-public class Result {
+public class Result implements Serializable {
 
   @Expose private Boolean adult;
   @SerializedName("backdrop_path") @Expose private String backdropPath;
