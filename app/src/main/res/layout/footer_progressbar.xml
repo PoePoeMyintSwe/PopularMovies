@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     wheel:barColor="@color/primary_dark"
-    wheel:circleRadius="20dp"
+    wheel:circleRadius="40dp"
     wheel:progressIndeterminate="true"
     wheel:barWidth="@dimen/spacing_micro"
     android:id="@+id/progress_bar"

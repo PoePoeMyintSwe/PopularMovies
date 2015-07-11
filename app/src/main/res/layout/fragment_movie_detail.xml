@@ -5,10 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-  <ScrollView
+  <com.poepoemyintswe.popularmovies.ui.ObservableScrollView
+      android:id="@+id/sv_content"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
     <android.support.design.widget.CoordinatorLayout
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -18,7 +20,7 @@
           android:orientation="vertical"
           >
         <FrameLayout
-            android:id="@+id/header"
+            android:id="@+id/fl_backdrop_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
           <ImageView
@@ -68,29 +70,26 @@
         </LinearLayout>
       </LinearLayout>
 
-      <ImageView
-          android:id="@+id/iv_movie_image"
+      <FrameLayout
+          android:id="@+id/fl_thumbnail_container"
           android:layout_height="@dimen/image_height"
           android:layout_width="@dimen/image_width"
-          app:layout_anchor="@id/header"
+          app:layout_anchor="@id/fl_backdrop_container"
           app:layout_anchorGravity="bottom|left|start"
-          android:src="@drawable/placeholder"
-          android:scaleType="fitXY"
-          android:layout_margin="@dimen/spacing_major"/>
+          android:layout_margin="@dimen/spacing_major">
+        <ImageView
+            android:id="@+id/iv_movie_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/placeholder"
+            android:scaleType="fitXY"/>
+      </FrameLayout>
+
 
     </android.support.design.widget.CoordinatorLayout>
-  </ScrollView>
-  <android.support.v7.widget.Toolbar
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:fitsSystemWindows="true"
-      android:id="@+id/toolbar"
-      android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize"
-      android:windowActionBarOverlay="true"
-      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-      app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-      app:elevation="4dp"
-      app:layout_collapseMode="pin"
+  </com.poepoemyintswe.popularmovies.ui.ObservableScrollView>
+  <include
+      android:id="@+id/fading_toolbar"
+      layout="@layout/toolbar"
       />
 </FrameLayout>

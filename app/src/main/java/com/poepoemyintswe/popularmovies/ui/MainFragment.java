@@ -114,18 +114,6 @@ public class MainFragment extends Fragment {
     mRecyclerView.setAdapter(movieAdapter);
     mRecyclerView.setVisibility(View.GONE);
     mRecyclerView.addOnScrollListener(new ScrollListener());
-    mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-      @Override public int getSpanSize(int position) {
-        switch (movieAdapter.getItemViewType(position)) {
-          case MovieAdapter.ITEM:
-            return 1;
-          case MovieAdapter.FOOTER:
-            return 3;
-          default:
-            return -1;
-        }
-      }
-    });
 
     movieAdapter.setOnItemClickListener(new MovieAdapter.ClickListener() {
       @Override public void onItemClick(View view, int position) {
