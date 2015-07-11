@@ -1,7 +1,7 @@
 package com.poepoemyintswe.popularmovies.api;
 
-import com.google.gson.JsonObject;
 import com.poepoemyintswe.popularmovies.BuildConfig;
+import com.poepoemyintswe.popularmovies.model.Movie;
 import com.squareup.okhttp.OkHttpClient;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
@@ -51,12 +51,12 @@ public class MyRestAdapter {
     return restAdapter;
   }
 
-  public Observable<JsonObject> getMovies() {
+  public Observable<Movie> getMovies() {
     return myService.getMovies("popularity.desc");
   }
 
   interface MyService {
-    @GET(DISCOVER_MOVIE + "?" + API_KEY + "=" + BuildConfig.KEY) Observable<JsonObject> getMovies(
+    @GET(DISCOVER_MOVIE + "?" + API_KEY + "=" + BuildConfig.KEY) Observable<Movie> getMovies(
         @Query(SORT_BY) String sortBy);
   }
 }
