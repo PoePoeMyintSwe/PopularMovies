@@ -14,7 +14,7 @@ android {
     targetSdkVersion 22
     versionCode 1
     versionName "1.0"
-    buildConfigField "String", "KEY", "61743a48219745264e2aea9b2df9a391"
+    buildConfigField "String", "KEY", "\"61743a48219745264e2aea9b2df9a391\""
   }
 
   buildTypes {
