@@ -88,8 +88,13 @@
 
     </android.support.design.widget.CoordinatorLayout>
   </com.poepoemyintswe.popularmovies.ui.ObservableScrollView>
-  <include
-      android:id="@+id/fading_toolbar"
-      layout="@layout/toolbar"
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:windowActionBarOverlay="true"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+      app:elevation="4dp"
       />
 </FrameLayout>

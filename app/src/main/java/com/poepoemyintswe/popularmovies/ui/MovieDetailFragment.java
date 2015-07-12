@@ -1,7 +1,5 @@
 package com.poepoemyintswe.popularmovies.ui;
 
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -19,6 +17,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.poepoemyintswe.popularmovies.R;
 import com.poepoemyintswe.popularmovies.model.Result;
 import java.text.ParseException;
@@ -35,7 +35,7 @@ public class MovieDetailFragment extends Fragment
 
   @Bind(R.id.iv_backdrop) ImageView mBackDrop;
   @Bind(R.id.iv_movie_image) ImageView mPoster;
-  @Bind(R.id.fading_toolbar) Toolbar toolbar;
+  @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.tv_overview) TextView mTvOverview;
   @Bind(R.id.tv_release_date) TextView mTvReleaseDate;
   @Bind(R.id.tv_title) TextView mTvTitle;
@@ -44,13 +44,12 @@ public class MovieDetailFragment extends Fragment
   @Bind(R.id.fl_backdrop_container) FrameLayout mBackdropFrame;
   @Bind(R.id.fl_thumbnail_container) FrameLayout mThumbnailFrame;
 
+  private boolean mFabIsShown;
+
   private static final String RESULT = "result";
   private static final String HEIGHT = "height";
-
   private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
   private SpannableString mSpannableString;
-
-  private Drawable mActionBarBackgroundDrawable;
   private int mActionBarTitleColor;
 
   private AppCompatActivity mActivity;
@@ -81,18 +80,18 @@ public class MovieDetailFragment extends Fragment
         (ViewGroup) inflater.inflate(R.layout.fragment_movie_detail, container, false);
     ButterKnife.bind(this, rootView);
 
-    //Actionbar
-    mActionBarBackgroundDrawable = toolbar.getBackground();
-
-    mActionBarTitleColor = getResources().getColor(R.color.white);
-    mSpannableString = new SpannableString(result.getOriginalTitle());
-    mAlphaForegroundColorSpan = new AlphaForegroundColorSpan(mActionBarTitleColor);
-
+    ViewHelper.setScaleX(mThumbnailFrame, 1);
+    ViewHelper.setScaleY(mThumbnailFrame, 1);
 
     mActivity.setSupportActionBar(toolbar);
     ActionBar mActionBar = mActivity.getSupportActionBar();
     mActionBar.setDisplayHomeAsUpEnabled(true);
     mActionBar.setTitle("");
+
+    mActionBarTitleColor = getResources().getColor(R.color.white);
+
+    mSpannableString = new SpannableString(result.getTitle());
+    mAlphaForegroundColorSpan = new AlphaForegroundColorSpan(mActionBarTitleColor);
 
     //Text
     mTvTitle.setText(result.getTitle());
@@ -134,24 +133,54 @@ public class MovieDetailFragment extends Fragment
   }
 
   @Override public void onScrollChanged(ObservableScrollView scrollView, int y, int oldy) {
+    float py = y * .5f;
+    toolbarFading(y);
+    mBackdropFrame.setTop((int) py < 0 ? 0 : (int) py);
     int headerHeight = mBackdropFrame.getHeight() - toolbar.getHeight();
     float ratio = 0;
     if (oldy > 0 && headerHeight > 0) {
       ratio = (float) Math.min(Math.max(oldy, 0), headerHeight) / headerHeight;
     }
-    mBackdropFrame.setTop((int) ratio < 0 ? 0 : (int) ratio);
-    updateActionBarTransparency(ratio);
     setTitleAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
+    if (y > ratio) {
+      hideFab();
+    } else {
+      showFab();
+    }
   }
 
-  private void updateActionBarTransparency(float scrollRatio) {
-    int newAlpha = (int) (scrollRatio * 255);
-    mActionBarBackgroundDrawable.setAlpha(newAlpha);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      toolbar.setBackground(mActionBarBackgroundDrawable);
-    } else {
-      toolbar.setBackgroundDrawable(mActionBarBackgroundDrawable);
+  private void showFab() {
+    if (!mFabIsShown) {
+      ViewPropertyAnimator.animate(mTvTitle).cancel();
+      ViewPropertyAnimator.animate(mTvTitle).scaleX(1).scaleY(1).setDuration(500).start();
+      ViewPropertyAnimator.animate(mThumbnailFrame).cancel();
+      ViewPropertyAnimator.animate(mThumbnailFrame).scaleX(1).scaleY(1).setDuration(300).start();
+
+      mFabIsShown = true;
     }
+  }
+
+  private void hideFab() {
+    if (mFabIsShown) {
+      ViewPropertyAnimator.animate(mTvTitle).cancel();
+      ViewPropertyAnimator.animate(mTvTitle).scaleX(0).scaleY(0).setDuration(500).start();
+      ViewPropertyAnimator.animate(mThumbnailFrame).cancel();
+      ViewPropertyAnimator.animate(mThumbnailFrame).scaleX(0).scaleY(0).setDuration(300).start();
+      mFabIsShown = false;
+    }
+  }
+
+  private void toolbarFading(int scrollY) {
+    int baseColor = getResources().getColor(R.color.primary);
+    float alpha = Math.min(1, (float) scrollY / height);
+    toolbar.setBackgroundColor(getColorWithAlpha(alpha, baseColor));
+    ViewHelper.setTranslationY(mBackDrop, scrollY / 2);
+  }
+
+  private int getColorWithAlpha(float alpha, int baseColor) {
+    int a = Math.min(255, Math.max(0, (int) (alpha * 255))) << 24;
+    int rgb = 0x00ffffff & baseColor;
+    return a + rgb;
   }
 
   private void setTitleAlpha(float alpha) {
@@ -164,5 +193,4 @@ public class MovieDetailFragment extends Fragment
   public static float clamp(float value, float min, float max) {
     return Math.max(min, Math.min(value, max));
   }
-
 }
