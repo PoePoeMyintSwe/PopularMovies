@@ -13,4 +13,8 @@ public class Config {
   public static final String API_KEY = "api_key";
   public static final String MOVIE= "movie";
   public static final String POSITION ="position";
+  public static final String POPULARITY = "popularity.desc";
+  public static final String RATING = "vote_average.desc";
+
+  public static final String[] SORT_ORDER = {POPULARITY, RATING};
 }

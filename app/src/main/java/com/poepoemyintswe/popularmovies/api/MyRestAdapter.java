@@ -52,12 +52,12 @@ public class MyRestAdapter {
     return restAdapter;
   }
 
-  public Observable<Movie> getMovies() {
-    return myService.getMovies("popularity.desc");
+  public Observable<Movie> getMovies(String sort) {
+    return myService.getMovies(sort);
   }
 
-  public Observable<Movie> getMoviesByPages(int page) {
-    return myService.getMoviesByPages("popularity.desc", page);
+  public Observable<Movie> getMoviesByPages(String sort, int page) {
+    return myService.getMoviesByPages(sort, page);
   }
 
   interface MyService {

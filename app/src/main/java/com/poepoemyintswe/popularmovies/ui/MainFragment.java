@@ -1,15 +1,20 @@
 package com.poepoemyintswe.popularmovies.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -27,6 +32,7 @@ import rx.schedulers.Schedulers;
 
 import static com.poepoemyintswe.popularmovies.Config.MOVIE;
 import static com.poepoemyintswe.popularmovies.Config.POSITION;
+import static com.poepoemyintswe.popularmovies.Config.SORT_ORDER;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -36,12 +42,26 @@ public class MainFragment extends Fragment {
   @Bind(R.id.rv_movies) RecyclerView mRecyclerView;
   @Bind(R.id.progress_bar) ProgressWheel mProgressWheel;
 
+  final CharSequence[] sortBy = { " Popularity ", " Highest Rating " };
+  AlertDialog mDialog;
+  private String sort;
+  private int check = 0;
   private int pageNum = 1;
   private boolean canLoadMore = true, loadInProgress = false;
   private GridLayoutManager mLayoutManager;
 
   private MovieAdapter movieAdapter;
   public MainFragment() {
+  }
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setHasOptionsMenu(true);
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    getMovies();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,14 +72,8 @@ public class MainFragment extends Fragment {
     return view;
   }
 
-  @Override public void onActivityCreated(Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    getMovies();
-  }
-
   private void loadMoreMovies() {
-    MyRestAdapter.getInstance()
-        .getMoviesByPages(pageNum)
+    MyRestAdapter.getInstance().getMoviesByPages(sort, pageNum)
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Movie>() {
@@ -85,7 +99,7 @@ public class MainFragment extends Fragment {
   }
 
   private void getMovies() {
-    MyRestAdapter.getInstance().getMovies()
+    MyRestAdapter.getInstance().getMovies(sort)
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Movie>() {
@@ -105,6 +119,7 @@ public class MainFragment extends Fragment {
   }
 
   private void initUI() {
+    sort = SORT_ORDER[0];
     mLayoutManager = new GridLayoutManager(getActivity(), 3);
     mRecyclerView.setLayoutManager(mLayoutManager);
     mRecyclerView.setHasFixedSize(true);
@@ -123,7 +138,6 @@ public class MainFragment extends Fragment {
         startActivity(intent);
       }
     });
-
   }
 
   private int calculateWidth() {
@@ -163,5 +177,40 @@ public class MainFragment extends Fragment {
         }
       }
     }
+  }
+
+  private void showSortDialog() {
+    for (int i = 0; i < SORT_ORDER.length; i++) {
+      if (sort.equals(SORT_ORDER)) check = i;
+    }
+    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    builder.setTitle("Sort movies by");
+    builder.setSingleChoiceItems(sortBy, check, new DialogInterface.OnClickListener() {
+      public void onClick(DialogInterface dialog, int item) {
+        if (!sort.equals(SORT_ORDER[item])) {
+
+          check = item;
+          sort = SORT_ORDER[item];
+          getMovies();
+        }
+        mDialog.dismiss();
+      }
+    });
+    mDialog = builder.create();
+    mDialog.show();
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.menu_main, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.action_sort:
+        showSortDialog();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 }

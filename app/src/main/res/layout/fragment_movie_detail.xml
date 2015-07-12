@@ -30,12 +30,21 @@
               android:scaleType="centerCrop"
               android:fitsSystemWindows="true"
               tools:src="@drawable/backdrop"/>
-          <TextView
-              android:id="@+id/tv_title"
-              style="@style/movieTitle"
+          <FrameLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              tools:text="Hobbit"/>
+              android:layout_gravity="bottom|center_vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/semi_black_bg"/>
+            <TextView
+                android:id="@+id/tv_title"
+                style="@style/movieTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Hobbit"/>
+          </FrameLayout>
         </FrameLayout>
         <LinearLayout
             android:layout_width="match_parent"
