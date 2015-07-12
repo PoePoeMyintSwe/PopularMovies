@@ -1,5 +1,8 @@
 package com.poepoemyintswe.popularmovies.ui;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -107,6 +110,7 @@ public class MovieDetailFragment extends Fragment
     }
 
     //rating
+    customRatingBar();
     mRatingBar.setRating(result.getVoteAverage().floatValue());
 
     //Photo
@@ -142,6 +146,7 @@ public class MovieDetailFragment extends Fragment
     float py = y * .5f;
     toolbarFading(scrollView.getScrollY());
     mBackdropFrame.setTop((int) py < 0 ? 0 : (int) py);
+    mTvTitle.setTop((int) py < 0 ? 0 : (int) py);
     int headerHeight = mBackdropFrame.getHeight() - toolbar.getHeight();
     float ratio = 0;
     if (oldy > 0 && headerHeight > 0) {
@@ -157,8 +162,6 @@ public class MovieDetailFragment extends Fragment
 
   private void showFab() {
     if (!mFabIsShown) {
-      ViewPropertyAnimator.animate(mTvTitle).cancel();
-      ViewPropertyAnimator.animate(mTvTitle).scaleX(1).scaleY(1).setDuration(500).start();
       ViewPropertyAnimator.animate(mThumbnailFrame).cancel();
       ViewPropertyAnimator.animate(mThumbnailFrame).scaleX(1).scaleY(1).setDuration(300).start();
 
@@ -168,8 +171,6 @@ public class MovieDetailFragment extends Fragment
 
   private void hideFab() {
     if (mFabIsShown) {
-      ViewPropertyAnimator.animate(mTvTitle).cancel();
-      ViewPropertyAnimator.animate(mTvTitle).scaleX(0).scaleY(0).setDuration(500).start();
       ViewPropertyAnimator.animate(mThumbnailFrame).cancel();
       ViewPropertyAnimator.animate(mThumbnailFrame).scaleX(0).scaleY(0).setDuration(300).start();
       mFabIsShown = false;
@@ -199,4 +200,13 @@ public class MovieDetailFragment extends Fragment
   public static float clamp(float value, float min, float max) {
     return Math.max(min, Math.min(value, max));
   }
+
+  private void customRatingBar() {
+    LayerDrawable stars = (LayerDrawable) mRatingBar.getProgressDrawable();
+    stars.getDrawable(2).setColorFilter(Color.parseColor("#4CAF50"), PorterDuff.Mode.SRC_ATOP);
+    stars.getDrawable(1).setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP);
+    stars.getDrawable(0).setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_ATOP);
+    mRatingBar.setProgressDrawable(stars);
+  }
+
 }

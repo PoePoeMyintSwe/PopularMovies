@@ -7,4 +7,8 @@
       android:title="@string/action_sort"
       android:icon="@drawable/ic_sort"
       app:showAsAction="always"/>
+  <item
+      android:id="@+id/license"
+      android:title="@string/action_license"
+      />
 </menu>

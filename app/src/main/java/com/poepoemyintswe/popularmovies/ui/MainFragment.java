@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.pnikosis.materialishprogress.ProgressWheel;
@@ -200,6 +201,21 @@ public class MainFragment extends Fragment {
     mDialog.show();
   }
 
+  private void showLicense() {
+    WebView webView = new WebView(getActivity());
+    webView.loadUrl("file:///android_asset/licenses.html");
+
+    new android.app.AlertDialog.Builder(getActivity()).setTitle(R.string.action_license)
+        .setView(webView)
+        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+            dialog.dismiss();
+          }
+        })
+        .create()
+        .show();
+  }
+
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_main, menu);
@@ -209,6 +225,9 @@ public class MainFragment extends Fragment {
     switch (item.getItemId()) {
       case R.id.action_sort:
         showSortDialog();
+        return true;
+      case R.id.license:
+        showLicense();
         return true;
     }
     return super.onOptionsItemSelected(item);
