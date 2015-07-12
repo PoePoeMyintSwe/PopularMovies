@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -43,6 +44,8 @@ public class MovieDetailFragment extends Fragment
   @Bind(R.id.sv_content) ObservableScrollView mScrollView;
   @Bind(R.id.fl_backdrop_container) FrameLayout mBackdropFrame;
   @Bind(R.id.fl_thumbnail_container) FrameLayout mThumbnailFrame;
+  @Bind(R.id.rb_rating) AppCompatRatingBar mRatingBar;
+  @Bind(R.id.tv_vote) TextView mTvVote;
 
   private boolean mFabIsShown;
 
@@ -87,7 +90,6 @@ public class MovieDetailFragment extends Fragment
     ActionBar mActionBar = mActivity.getSupportActionBar();
     mActionBar.setDisplayHomeAsUpEnabled(true);
     mActionBar.setTitle("");
-
     mActionBarTitleColor = getResources().getColor(R.color.white);
 
     mSpannableString = new SpannableString(result.getTitle());
@@ -97,11 +99,15 @@ public class MovieDetailFragment extends Fragment
     mTvTitle.setText(result.getTitle());
     mTvOverview.setText(result.getOverview());
     mTvLanguage.setText(result.getOriginalLanguage());
+    mTvVote.setText("Total " + result.getVoteCount());
     try {
       mTvReleaseDate.setText(formatDate());
     } catch (ParseException e) {
       e.printStackTrace();
     }
+
+    //rating
+    mRatingBar.setRating(result.getVoteAverage().floatValue());
 
     //Photo
     ViewGroup.LayoutParams params = mBackDrop.getLayoutParams();
@@ -134,14 +140,14 @@ public class MovieDetailFragment extends Fragment
 
   @Override public void onScrollChanged(ObservableScrollView scrollView, int y, int oldy) {
     float py = y * .5f;
-    toolbarFading(y);
+    toolbarFading(scrollView.getScrollY());
     mBackdropFrame.setTop((int) py < 0 ? 0 : (int) py);
     int headerHeight = mBackdropFrame.getHeight() - toolbar.getHeight();
     float ratio = 0;
     if (oldy > 0 && headerHeight > 0) {
       ratio = (float) Math.min(Math.max(oldy, 0), headerHeight) / headerHeight;
     }
-    setTitleAlpha(clamp(5.0F * ratio - 4.0F, 0.0F, 1.0F));
+    setTitleAlpha(clamp(5.0F *py  - 4.0F, 0.0F, 1.0F));
     if (y > ratio) {
       hideFab();
     } else {

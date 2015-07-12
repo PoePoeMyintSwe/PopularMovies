@@ -58,6 +58,26 @@
               tools:text="Language: EN"/>
 
           <TextView
+              android:text="@string/rating"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              style="@style/labelTitle"/>
+          <android.support.v7.widget.AppCompatRatingBar
+              android:id="@+id/rb_rating"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:numStars="10"
+              android:stepSize="0.1"
+              style="?android:attr/ratingBarStyleSmall"
+              android:layout_marginBottom="@dimen/spacing_minor"
+              android:layout_marginLeft="@dimen/spacing_major"/>
+
+          <TextView
+              android:id="@+id/tv_vote"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              style="@style/overviewTextStyle"/>
+          <TextView
               android:text="@string/overview"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
