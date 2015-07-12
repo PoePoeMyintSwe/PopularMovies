@@ -13,6 +13,9 @@ import static com.poepoemyintswe.popularmovies.Config.API_KEY;
 import static com.poepoemyintswe.popularmovies.Config.BASE_URL;
 import static com.poepoemyintswe.popularmovies.Config.DISCOVER_MOVIE;
 import static com.poepoemyintswe.popularmovies.Config.PAGE;
+import static com.poepoemyintswe.popularmovies.Config.POPULARITY;
+import static com.poepoemyintswe.popularmovies.Config.RATING;
+import static com.poepoemyintswe.popularmovies.Config.RATING_COUNT;
 import static com.poepoemyintswe.popularmovies.Config.SORT_BY;
 
 /**
@@ -52,19 +55,33 @@ public class MyRestAdapter {
     return restAdapter;
   }
 
-  public Observable<Movie> getMovies(String sort) {
-    return myService.getMovies(sort);
+  public Observable<Movie> getMovies() {
+    return myService.getMovies(POPULARITY);
   }
 
-  public Observable<Movie> getMoviesByPages(String sort, int page) {
-    return myService.getMoviesByPages(sort, page);
+  public Observable<Movie> getMoviesByRating() {
+    return myService.getMovies(RATING, RATING_COUNT);
+  }
+
+  public Observable<Movie> getMoviesByPages(int page) {
+    return myService.getMoviesByPages(POPULARITY, page);
+  }
+
+  public Observable<Movie> getMoviesByPagesNRating(int page) {
+    return myService.getMoviesByPages(RATING, RATING_COUNT, page);
   }
 
   interface MyService {
+    @GET(DISCOVER_MOVIE + "?" + API_KEY + "=" + BuildConfig.KEY) Observable<Movie> getMovies(
+        @Query(SORT_BY) String sortBy1, @Query(SORT_BY) String sortBy2);
+
     @GET(DISCOVER_MOVIE + "?" + API_KEY + "=" + BuildConfig.KEY) Observable<Movie> getMovies(
         @Query(SORT_BY) String sortBy);
 
     @GET(DISCOVER_MOVIE + "?" + API_KEY + "=" + BuildConfig.KEY) Observable<Movie> getMoviesByPages(
         @Query(SORT_BY) String sortBy, @Query(PAGE) int page);
+
+    @GET(DISCOVER_MOVIE + "?" + API_KEY + "=" + BuildConfig.KEY) Observable<Movie> getMoviesByPages(
+        @Query(SORT_BY) String sortBy1, @Query(SORT_BY) String sortBy2, @Query(PAGE) int page);
   }
 }

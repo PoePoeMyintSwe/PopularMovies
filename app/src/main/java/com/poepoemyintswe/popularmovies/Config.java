@@ -15,6 +15,6 @@ public class Config {
   public static final String POSITION ="position";
   public static final String POPULARITY = "popularity.desc";
   public static final String RATING = "vote_average.desc";
+  public static final String RATING_COUNT = "vote_count.desc";
 
-  public static final String[] SORT_ORDER = {POPULARITY, RATING};
 }

@@ -33,7 +33,6 @@ import rx.schedulers.Schedulers;
 
 import static com.poepoemyintswe.popularmovies.Config.MOVIE;
 import static com.poepoemyintswe.popularmovies.Config.POSITION;
-import static com.poepoemyintswe.popularmovies.Config.SORT_ORDER;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -45,7 +44,7 @@ public class MainFragment extends Fragment {
 
   final CharSequence[] sortBy = { " Popularity ", " Highest Rating " };
   AlertDialog mDialog;
-  private String sort;
+
   private int check = 0;
   private int pageNum = 1;
   private boolean canLoadMore = true, loadInProgress = false;
@@ -60,21 +59,44 @@ public class MainFragment extends Fragment {
     setHasOptionsMenu(true);
   }
 
-  @Override public void onStart() {
-    super.onStart();
-    getMovies();
-  }
-
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_main, container, false);
     ButterKnife.bind(this, view);
     initUI();
+    getMovies();
     return view;
   }
 
   private void loadMoreMovies() {
-    MyRestAdapter.getInstance().getMoviesByPages(sort, pageNum)
+    MyRestAdapter.getInstance().getMoviesByPages(pageNum)
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<Movie>() {
+          @Override public void onCompleted() {
+            loadInProgress = false;
+            movieAdapter.setFooterEnabled(false);
+          }
+
+          @Override public void onError(Throwable e) {
+            loadInProgress = false;
+            canLoadMore = false;
+            movieAdapter.setFooterEnabled(false);
+          }
+
+          @Override public void onNext(Movie movie) {
+            if (movie.getResults().size() > 0) {
+              movieAdapter.addMoreItems(movie.getResults());
+            } else {
+              canLoadMore = false;
+            }
+          }
+        });
+  }
+
+  private void loadMoreMoviesByRating() {
+    MyRestAdapter.getInstance()
+        .getMoviesByPagesNRating(pageNum)
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Movie>() {
@@ -100,7 +122,28 @@ public class MainFragment extends Fragment {
   }
 
   private void getMovies() {
-    MyRestAdapter.getInstance().getMovies(sort)
+    MyRestAdapter.getInstance().getMovies()
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<Movie>() {
+          @Override public void onCompleted() {
+            mProgressWheel.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+          }
+
+          @Override public void onError(Throwable e) {
+            Log.e("Error", e.getLocalizedMessage());
+          }
+
+          @Override public void onNext(Movie movie) {
+            movieAdapter.setItems(movie.getResults());
+          }
+        });
+  }
+
+  private void getMoviesByRating() {
+    MyRestAdapter.getInstance()
+        .getMoviesByRating()
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<Movie>() {
@@ -120,7 +163,6 @@ public class MainFragment extends Fragment {
   }
 
   private void initUI() {
-    sort = SORT_ORDER[0];
     mLayoutManager = new GridLayoutManager(getActivity(), 3);
     mRecyclerView.setLayoutManager(mLayoutManager);
     mRecyclerView.setHasFixedSize(true);
@@ -159,7 +201,11 @@ public class MainFragment extends Fragment {
 
   public void loadNextPage() {
     pageNum++;
-    loadMoreMovies();
+    if (check == 0) {
+      loadMoreMovies();
+    } else {
+      loadMoreMoviesByRating();
+    }
     movieAdapter.setFooterEnabled(true);
     loadInProgress = true;
   }
@@ -181,18 +227,20 @@ public class MainFragment extends Fragment {
   }
 
   private void showSortDialog() {
-    for (int i = 0; i < SORT_ORDER.length; i++) {
-      if (sort.equals(SORT_ORDER)) check = i;
-    }
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    AlertDialog.Builder builder =
+        new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
     builder.setTitle("Sort movies by");
     builder.setSingleChoiceItems(sortBy, check, new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int item) {
-        if (!sort.equals(SORT_ORDER[item])) {
-
+        if (check != item) {
           check = item;
-          sort = SORT_ORDER[item];
-          getMovies();
+          pageNum = 1;
+          mRecyclerView.scrollToPosition(0);
+          if (item == 0) {
+            getMovies();
+          } else {
+            getMoviesByRating();
+          }
         }
         mDialog.dismiss();
       }
@@ -205,7 +253,8 @@ public class MainFragment extends Fragment {
     WebView webView = new WebView(getActivity());
     webView.loadUrl("file:///android_asset/licenses.html");
 
-    new android.app.AlertDialog.Builder(getActivity()).setTitle(R.string.action_license)
+    new android.app.AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle).setTitle(
+        R.string.action_license)
         .setView(webView)
         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int whichButton) {
