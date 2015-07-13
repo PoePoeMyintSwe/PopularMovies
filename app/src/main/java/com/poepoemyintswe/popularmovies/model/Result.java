@@ -1,42 +1,47 @@
 package com.poepoemyintswe.popularmovies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by poepoe on 11/7/15.
  */
 
-public class Result implements Serializable {
+public class Result implements Parcelable {
 
-  @Expose private Boolean adult;
   @SerializedName("backdrop_path") @Expose private String backdropPath;
-  @SerializedName("genre_ids") @Expose private List<Integer> genreIds = new ArrayList<Integer>();
-  @Expose private Integer id;
   @SerializedName("original_language") @Expose private String originalLanguage;
   @SerializedName("original_title") @Expose private String originalTitle;
   @Expose private String overview;
   @SerializedName("release_date") @Expose private String releaseDate;
   @SerializedName("poster_path") @Expose private String posterPath;
-  @Expose private Double popularity;
   @Expose private String title;
-  @Expose private Boolean video;
-  @SerializedName("vote_average") @Expose private Double voteAverage;
-  @SerializedName("vote_count") @Expose private Integer voteCount;
+  @SerializedName("vote_average") @Expose private double voteAverage;
+  @SerializedName("vote_count") @Expose private int voteCount;
 
-  public Boolean getAdult() {
-    return adult;
+  private Result(Parcel in) {
+    backdropPath = in.readString();
+    originalLanguage = in.readString();
+    originalTitle = in.readString();
+    overview = in.readString();
+    releaseDate = in.readString();
+    posterPath = in.readString();
+    title = in.readString();
+    voteAverage = in.readDouble();
+    voteCount = in.readInt();
   }
 
-  /**
-   * @param adult The adult
-   */
-  public void setAdult(Boolean adult) {
-    this.adult = adult;
-  }
+  public static final Creator<Result> CREATOR = new Creator<Result>() {
+    @Override public Result createFromParcel(Parcel in) {
+      return new Result(in);
+    }
+
+    @Override public Result[] newArray(int size) {
+      return new Result[size];
+    }
+  };
 
   /**
    * @return The backdropPath
@@ -50,34 +55,6 @@ public class Result implements Serializable {
    */
   public void setBackdropPath(String backdropPath) {
     this.backdropPath = backdropPath;
-  }
-
-  /**
-   * @return The genreIds
-   */
-  public List<Integer> getGenreIds() {
-    return genreIds;
-  }
-
-  /**
-   * @param genreIds The genre_ids
-   */
-  public void setGenreIds(List<Integer> genreIds) {
-    this.genreIds = genreIds;
-  }
-
-  /**
-   * @return The id
-   */
-  public Integer getId() {
-    return id;
-  }
-
-  /**
-   * @param id The id
-   */
-  public void setId(Integer id) {
-    this.id = id;
   }
 
   /**
@@ -151,20 +128,6 @@ public class Result implements Serializable {
   }
 
   /**
-   * @return The popularity
-   */
-  public Double getPopularity() {
-    return popularity;
-  }
-
-  /**
-   * @param popularity The popularity
-   */
-  public void setPopularity(Double popularity) {
-    this.popularity = popularity;
-  }
-
-  /**
    * @return The title
    */
   public String getTitle() {
@@ -177,46 +140,67 @@ public class Result implements Serializable {
   public void setTitle(String title) {
     this.title = title;
   }
-
-  /**
-   * @return The video
-   */
-  public Boolean getVideo() {
-    return video;
-  }
-
-  /**
-   * @param video The video
-   */
-  public void setVideo(Boolean video) {
-    this.video = video;
-  }
-
   /**
    * @return The voteAverage
    */
-  public Double getVoteAverage() {
+  public double getVoteAverage() {
     return voteAverage;
   }
 
   /**
    * @param voteAverage The vote_average
    */
-  public void setVoteAverage(Double voteAverage) {
+  public void setVoteAverage(double voteAverage) {
     this.voteAverage = voteAverage;
   }
 
   /**
    * @return The voteCount
    */
-  public Integer getVoteCount() {
+  public int getVoteCount() {
     return voteCount;
   }
 
   /**
    * @param voteCount The vote_count
    */
-  public void setVoteCount(Integer voteCount) {
+  public void setVoteCount(int voteCount) {
     this.voteCount = voteCount;
+  }
+
+  @Override public String toString() {
+    return backdropPath
+        + ":"
+        + originalLanguage
+        + ":"
+        + originalTitle
+        + ":"
+        + overview
+        + ":"
+        + releaseDate
+        + ":"
+        + posterPath
+        + ":"
+        + title
+        + ":"
+        + voteAverage
+        + ":"
+        + voteCount;
+  }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(backdropPath);
+    dest.writeString(originalLanguage);
+    dest.writeString(originalTitle);
+    dest.writeString(overview);
+    dest.writeString(releaseDate);
+    dest.writeString(posterPath);
+    dest.writeString(title);
+    dest.writeDouble(voteAverage);
+    dest.writeInt(voteCount);
   }
 }

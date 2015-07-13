@@ -22,7 +22,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
   ClickListener mItemClickListener;
 
   private boolean isFooterEnabled = false;
-  private List<Result> results = new ArrayList<>();
+  private ArrayList<Result> results = new ArrayList<>();
   private int height;
 
   public static final int ITEM = 1;
@@ -33,7 +33,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     this.height = height;
   }
 
-  public void setItems(List<Result> results) {
+  public void setItems(ArrayList<Result> results) {
     this.results = results;
     notifyDataSetChanged();
   }
@@ -88,7 +88,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     return (isFooterEnabled) ? results.size() + 1 : results.size();
   }
 
-  public List<Result> getResults() {
+  public ArrayList<Result> getResults() {
     return results;
   }
 

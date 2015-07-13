@@ -65,7 +65,7 @@ public class MovieDetailFragment extends Fragment
   public static MovieDetailFragment newInstance(Result result, int height) {
     MovieDetailFragment f = new MovieDetailFragment();
     Bundle args = new Bundle();
-    args.putSerializable(RESULT, result);
+    args.putParcelable(RESULT, result);
     args.putInt(HEIGHT, height);
     f.setArguments(args);
     return f;
@@ -75,7 +75,7 @@ public class MovieDetailFragment extends Fragment
     super.onCreate(savedInstanceState);
     mActivity = (AppCompatActivity) getActivity();
     if (getArguments() != null) {
-      result = (Result) getArguments().getSerializable(RESULT);
+      result = getArguments().getParcelable(RESULT);
       height = getArguments().getInt(HEIGHT);
     }
   }
@@ -111,7 +111,7 @@ public class MovieDetailFragment extends Fragment
 
     //rating
     customRatingBar();
-    mRatingBar.setRating(result.getVoteAverage().floatValue());
+    mRatingBar.setRating((float) result.getVoteAverage());
 
     //Photo
     ViewGroup.LayoutParams params = mBackDrop.getLayoutParams();

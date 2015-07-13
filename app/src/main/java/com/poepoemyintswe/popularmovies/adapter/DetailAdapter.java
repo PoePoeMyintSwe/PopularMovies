@@ -5,17 +5,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import com.poepoemyintswe.popularmovies.model.Result;
 import com.poepoemyintswe.popularmovies.ui.MovieDetailFragment;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by poepoe on 11/7/15.
  */
 public class DetailAdapter extends FragmentPagerAdapter {
 
-  private List<Result> results;
+  private ArrayList<Result> results;
   private int height;
 
-  public DetailAdapter(FragmentManager fm, List<Result> results, int height) {
+  public DetailAdapter(FragmentManager fm, ArrayList<Result> results, int height) {
     super(fm);
     this.results = results;
     this.height = height;

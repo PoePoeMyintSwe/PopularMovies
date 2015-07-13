@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,7 +27,8 @@ import com.poepoemyintswe.popularmovies.R;
 import com.poepoemyintswe.popularmovies.adapter.MovieAdapter;
 import com.poepoemyintswe.popularmovies.api.MyRestAdapter;
 import com.poepoemyintswe.popularmovies.model.Movie;
-import java.io.Serializable;
+import com.poepoemyintswe.popularmovies.model.Result;
+import java.util.ArrayList;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -44,6 +46,8 @@ public class MainFragment extends Fragment {
 
   final CharSequence[] sortBy = { " Popularity ", " Highest Rating " };
   AlertDialog mDialog;
+
+  ArrayList<Result> resultList;
 
   private int check = 0;
   private int pageNum = 1;
@@ -64,8 +68,23 @@ public class MainFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_main, container, false);
     ButterKnife.bind(this, view);
     initUI();
-    getMovies();
+
+    if (savedInstanceState == null || !savedInstanceState.containsKey(MOVIE)) {
+      getMovies();
+    } else {
+      resultList = savedInstanceState.getParcelableArrayList(MOVIE);
+      movieAdapter.setItems(resultList);
+      mProgressWheel.setVisibility(View.GONE);
+      mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
     return view;
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelableArrayList(MOVIE,
+        (ArrayList<? extends Parcelable>) movieAdapter.getResults());
   }
 
   private void loadMoreMovies() {
@@ -176,7 +195,8 @@ public class MainFragment extends Fragment {
     movieAdapter.setOnItemClickListener(new MovieAdapter.ClickListener() {
       @Override public void onItemClick(View view, int position) {
         Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-        intent.putExtra(MOVIE, (Serializable) movieAdapter.getResults());
+        intent.putParcelableArrayListExtra(MOVIE,
+            (ArrayList<? extends Parcelable>) movieAdapter.getResults());
         intent.putExtra(POSITION, position);
         startActivity(intent);
       }

@@ -2,17 +2,15 @@ package com.poepoemyintswe.popularmovies.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by poepoe on 11/7/15.
  */
-public class Movie implements Serializable {
+public class Movie {
 
   @Expose private Integer page;
-  @Expose private List<Result> results = new ArrayList<Result>();
+  @Expose private ArrayList<Result> results = new ArrayList<>();
   @SerializedName("total_pages") @Expose private Integer totalPages;
   @SerializedName("total_results") @Expose private Integer totalResults;
 
@@ -33,14 +31,14 @@ public class Movie implements Serializable {
   /**
    * @return The results
    */
-  public List<Result> getResults() {
+  public ArrayList<Result> getResults() {
     return results;
   }
 
   /**
    * @param results The results
    */
-  public void setResults(List<Result> results) {
+  public void setResults(ArrayList<Result> results) {
     this.results = results;
   }
 

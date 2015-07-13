@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 import com.poepoemyintswe.popularmovies.R;
 import com.poepoemyintswe.popularmovies.adapter.DetailAdapter;
 import com.poepoemyintswe.popularmovies.model.Result;
-import java.util.List;
+import java.util.ArrayList;
 
 import static com.poepoemyintswe.popularmovies.Config.MOVIE;
 import static com.poepoemyintswe.popularmovies.Config.POSITION;
@@ -29,7 +29,7 @@ public class MovieDetailActivity extends AppCompatActivity {
   }
 
   public void getMovieList() {
-    List<Result> results = (List<Result>) getIntent().getSerializableExtra(MOVIE);
+    ArrayList<Result> results = getIntent().getParcelableArrayListExtra(MOVIE);
     int position = getIntent().getIntExtra(POSITION, 0);
     mPager.setAdapter(new DetailAdapter(getSupportFragmentManager(), results, calculateHeight()));
     mPager.setCurrentItem(position);
