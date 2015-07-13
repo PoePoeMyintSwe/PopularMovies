@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.pnikosis.materialishprogress.ProgressWheel;
@@ -83,8 +83,7 @@ public class MainFragment extends Fragment {
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putParcelableArrayList(MOVIE,
-        (ArrayList<? extends Parcelable>) movieAdapter.getResults());
+    outState.putParcelableArrayList(MOVIE, movieAdapter.getResults());
   }
 
   private void loadMoreMovies() {
@@ -151,7 +150,10 @@ public class MainFragment extends Fragment {
           }
 
           @Override public void onError(Throwable e) {
-            Log.e("Error", e.getLocalizedMessage());
+            mProgressWheel.setVisibility(View.GONE);
+            Toast.makeText(getActivity(),
+                "Sorry! Something went wrong! Caused by " + e.getLocalizedMessage(),
+                Toast.LENGTH_SHORT).show();
           }
 
           @Override public void onNext(Movie movie) {
@@ -172,7 +174,10 @@ public class MainFragment extends Fragment {
           }
 
           @Override public void onError(Throwable e) {
-            Log.e("Error", e.getLocalizedMessage());
+            mProgressWheel.setVisibility(View.GONE);
+            Toast.makeText(getActivity(),
+                "Sorry! Something went wrong! Caused by " + e.getLocalizedMessage(),
+                Toast.LENGTH_SHORT).show();
           }
 
           @Override public void onNext(Movie movie) {
