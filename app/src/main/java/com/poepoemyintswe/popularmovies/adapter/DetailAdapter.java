@@ -13,12 +13,10 @@ import java.util.ArrayList;
 public class DetailAdapter extends FragmentPagerAdapter {
 
   private ArrayList<Result> results;
-  private int height;
 
-  public DetailAdapter(FragmentManager fm, ArrayList<Result> results, int height) {
+  public DetailAdapter(FragmentManager fm, ArrayList<Result> results) {
     super(fm);
     this.results = results;
-    this.height = height;
 
   }
 
@@ -27,6 +25,6 @@ public class DetailAdapter extends FragmentPagerAdapter {
   }
 
   @Override public Fragment getItem(int position) {
-    return MovieDetailFragment.newInstance(results.get(position), height);
+    return MovieDetailFragment.newInstance(results.get(position));
   }
 }

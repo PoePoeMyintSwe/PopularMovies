@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.poepoemyintswe.popularmovies.Config;
 import com.poepoemyintswe.popularmovies.R;
 import com.poepoemyintswe.popularmovies.model.Result;
 import java.text.ParseException;
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat;
 
 import static com.poepoemyintswe.popularmovies.Config.BACKDROP_URL;
 import static com.poepoemyintswe.popularmovies.Config.PHOTO_URL;
+import static com.poepoemyintswe.popularmovies.Config.RESULT;
 
 /**
  * Created by poepoe on 11/7/15.
@@ -51,9 +53,6 @@ public class MovieDetailFragment extends Fragment
   @Bind(R.id.tv_vote) TextView mTvVote;
 
   private boolean mFabIsShown;
-
-  private static final String RESULT = "result";
-  private static final String HEIGHT = "height";
   private AlphaForegroundColorSpan mAlphaForegroundColorSpan;
   private SpannableString mSpannableString;
   private int mActionBarTitleColor;
@@ -62,11 +61,10 @@ public class MovieDetailFragment extends Fragment
   private Result result;
   private int height;
 
-  public static MovieDetailFragment newInstance(Result result, int height) {
+  public static MovieDetailFragment newInstance(Result result) {
     MovieDetailFragment f = new MovieDetailFragment();
     Bundle args = new Bundle();
     args.putParcelable(RESULT, result);
-    args.putInt(HEIGHT, height);
     f.setArguments(args);
     return f;
   }
@@ -76,8 +74,8 @@ public class MovieDetailFragment extends Fragment
     mActivity = (AppCompatActivity) getActivity();
     if (getArguments() != null) {
       result = getArguments().getParcelable(RESULT);
-      height = getArguments().getInt(HEIGHT);
     }
+    height = Config.calculateHeight(getActivity().getWindowManager());
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,9 +88,11 @@ public class MovieDetailFragment extends Fragment
     ViewHelper.setScaleY(mThumbnailFrame, 1);
 
     mActivity.setSupportActionBar(toolbar);
-    ActionBar mActionBar = mActivity.getSupportActionBar();
-    mActionBar.setDisplayHomeAsUpEnabled(true);
-    mActionBar.setTitle("");
+    if (mActivity.getSupportActionBar() != null) {
+      ActionBar mActionBar = mActivity.getSupportActionBar();
+      mActionBar.setDisplayHomeAsUpEnabled(true);
+      mActionBar.setTitle("");
+    }
     mActionBarTitleColor = getResources().getColor(R.color.white);
 
     mSpannableString = new SpannableString(result.getTitle());

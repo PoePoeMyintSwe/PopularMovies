@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -55,8 +54,6 @@ public class MainFragment extends Fragment {
   private GridLayoutManager mLayoutManager;
 
   private MovieAdapter movieAdapter;
-  public MainFragment() {
-  }
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -200,8 +197,7 @@ public class MainFragment extends Fragment {
     movieAdapter.setOnItemClickListener(new MovieAdapter.ClickListener() {
       @Override public void onItemClick(View view, int position) {
         Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-        intent.putParcelableArrayListExtra(MOVIE,
-            (ArrayList<? extends Parcelable>) movieAdapter.getResults());
+        intent.putParcelableArrayListExtra(MOVIE, movieAdapter.getResults());
         intent.putExtra(POSITION, position);
         startActivity(intent);
       }

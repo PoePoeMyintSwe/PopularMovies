@@ -1,5 +1,10 @@
 package com.poepoemyintswe.popularmovies;
 
+import android.graphics.Point;
+import android.os.Build;
+import android.view.Display;
+import android.view.WindowManager;
+
 /**
  * Created by poepoe on 11/7/15.
  */
@@ -17,4 +22,20 @@ public class Config {
   public static final String RATING = "vote_average.desc";
   public static final String RATING_COUNT = "vote_count.desc";
 
+  public static final String RESULT = "result";
+  public static final String HEIGHT = "height";
+
+  public static int calculateHeight(WindowManager w) {
+    int measuredWidth;
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+      Point size = new Point();
+      w.getDefaultDisplay().getSize(size);
+      measuredWidth = size.x;
+    } else {
+      Display d = w.getDefaultDisplay();
+      measuredWidth = d.getWidth();
+    }
+    return (int) (measuredWidth / 1.618);
+  }
 }
