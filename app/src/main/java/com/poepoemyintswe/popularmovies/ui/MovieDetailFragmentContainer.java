@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +43,16 @@ public class MovieDetailFragmentContainer extends Fragment {
     position = getArguments().getInt(POSITION, 0);
   }
 
-  @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     ViewGroup rootView =
-        (ViewGroup) inflater.inflate(R.layout.fragment_movie_detail, container, false);
+        (ViewGroup) inflater.inflate(R.layout.fragment_movie_detail_container, container, false);
     ButterKnife.bind(this, rootView);
 
     mPager.setAdapter(new DetailAdapter(getActivity().getSupportFragmentManager(), results));
     mPager.setCurrentItem(position);
+
+    Log.e("Result size", " "+ results.size());
 
     return rootView;
   }

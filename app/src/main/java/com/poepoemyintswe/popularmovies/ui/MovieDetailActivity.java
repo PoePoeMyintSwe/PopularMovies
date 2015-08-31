@@ -18,7 +18,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     ArrayList<Result> results = getIntent().getParcelableArrayListExtra(MOVIE);
     int position = getIntent().getIntExtra(POSITION, 0);
 
-    if (savedInstanceState != null) {
+    if (savedInstanceState == null) {
       getSupportFragmentManager().beginTransaction()
           .add(R.id.fragment_detail_container,
               MovieDetailFragmentContainer.newInstance(results, position))
