@@ -54,10 +54,20 @@ public class MainFragment extends Fragment {
   private GridLayoutManager mLayoutManager;
 
   private MovieAdapter movieAdapter;
+  private boolean mTwoPane;
+
+  public static MainFragment newInstance(boolean twoPane) {
+    MainFragment fragment = new MainFragment();
+    Bundle bundle = new Bundle();
+    bundle.putBoolean("TwoPane", twoPane);
+    fragment.setArguments(bundle);
+    return fragment;
+  }
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
+    mTwoPane = getArguments().getBoolean("TwoPane");
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -184,7 +194,12 @@ public class MainFragment extends Fragment {
   }
 
   private void initUI() {
-    mLayoutManager = new GridLayoutManager(getActivity(), 3);
+    if (mTwoPane) {
+      mLayoutManager = new GridLayoutManager(getActivity(), 2);
+    } else {
+      mLayoutManager = new GridLayoutManager(getActivity(), 3);
+    }
+
     mRecyclerView.setLayoutManager(mLayoutManager);
     mRecyclerView.setHasFixedSize(true);
     int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing_nano);
@@ -196,10 +211,15 @@ public class MainFragment extends Fragment {
 
     movieAdapter.setOnItemClickListener(new MovieAdapter.ClickListener() {
       @Override public void onItemClick(View view, int position) {
-        Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-        intent.putParcelableArrayListExtra(MOVIE, movieAdapter.getResults());
-        intent.putExtra(POSITION, position);
-        startActivity(intent);
+        if (mTwoPane) {
+
+        } else {
+          Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
+          intent.putParcelableArrayListExtra(MOVIE, movieAdapter.getResults());
+          intent.putExtra(POSITION, position);
+          startActivity(intent);
+        }
+
       }
     });
   }

@@ -41,7 +41,7 @@ public class MovieDetailFragment extends Fragment
 
   @Bind(R.id.iv_backdrop) ImageView mBackDrop;
   @Bind(R.id.iv_movie_image) ImageView mPoster;
-  @Bind(R.id.toolbar) Toolbar toolbar;
+  @Bind(R.id.detail_toolbar) Toolbar toolbar;
   @Bind(R.id.tv_overview) TextView mTvOverview;
   @Bind(R.id.tv_release_date) TextView mTvReleaseDate;
   @Bind(R.id.tv_title) TextView mTvTitle;
@@ -95,43 +95,45 @@ public class MovieDetailFragment extends Fragment
     }
     mActionBarTitleColor = getResources().getColor(R.color.white);
 
-    mSpannableString = new SpannableString(result.getTitle());
-    mAlphaForegroundColorSpan = new AlphaForegroundColorSpan(mActionBarTitleColor);
+    if (result != null) {
+      mSpannableString = new SpannableString(result.getTitle());
+      mAlphaForegroundColorSpan = new AlphaForegroundColorSpan(mActionBarTitleColor);
 
-    //Text
-    mTvTitle.setText(result.getTitle());
-    mTvOverview.setText(result.getOverview());
-    mTvLanguage.setText(result.getOriginalLanguage());
-    mTvVote.setText("Total " + result.getVoteCount());
-    try {
-      mTvReleaseDate.setText(formatDate());
-    } catch (ParseException e) {
-      e.printStackTrace();
+      //Text
+      mTvTitle.setText(result.getTitle());
+      mTvOverview.setText(result.getOverview());
+      mTvLanguage.setText(result.getOriginalLanguage());
+      mTvVote.setText("Total " + result.getVoteCount());
+      try {
+        mTvReleaseDate.setText(formatDate());
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+
+      //rating
+      customRatingBar();
+      mRatingBar.setRating((float) result.getVoteAverage());
+
+      //Photo
+      ViewGroup.LayoutParams params = mBackDrop.getLayoutParams();
+      params.height = height;
+      mBackDrop.setLayoutParams(params);
+
+      Glide.with(getActivity())
+          .load(BACKDROP_URL + result.getBackdropPath())
+          .diskCacheStrategy(DiskCacheStrategy.ALL)
+          .placeholder(R.drawable.backdrop)
+          .crossFade()
+          .into(mBackDrop);
+      Glide.with(getActivity())
+          .load(PHOTO_URL + result.getPosterPath())
+          .diskCacheStrategy(DiskCacheStrategy.ALL)
+          .placeholder(R.drawable.placeholder)
+          .crossFade()
+          .into(mPoster);
+
+      mScrollView.setScrollViewListener(this);
     }
-
-    //rating
-    customRatingBar();
-    mRatingBar.setRating((float) result.getVoteAverage());
-
-    //Photo
-    ViewGroup.LayoutParams params = mBackDrop.getLayoutParams();
-    params.height = height;
-    mBackDrop.setLayoutParams(params);
-
-    Glide.with(getActivity())
-        .load(BACKDROP_URL + result.getBackdropPath())
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .placeholder(R.drawable.backdrop)
-        .crossFade()
-        .into(mBackDrop);
-    Glide.with(getActivity())
-        .load(PHOTO_URL + result.getPosterPath())
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .placeholder(R.drawable.placeholder)
-        .crossFade()
-        .into(mPoster);
-
-    mScrollView.setScrollViewListener(this);
 
     return rootView;
   }
